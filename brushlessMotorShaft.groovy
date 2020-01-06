@@ -10,11 +10,30 @@ CSG generate(){
 	def boltPatternDiameterValue = measurments.boltPatternDiameter
 	def numberOfBoltsValue = measurments.numberOfBolts
 	def boltPatternDiameterLong =measurments.boltPatternDiameterLong
-	println "Loaded from vitamins measurments boltPatternDiameterValue:  "+boltPatternDiameterValue+" value is = "+boltPatternDiameterValue
-	println "Loaded from vitamins measurments numberOfBoltsValue:  "+numberOfBoltsValue+" value is = "+numberOfBoltsValue
-	// Stub of a CAD object
-	CSG part = new Cube().toCSG()
-	return part
+	double numberOfBolts =measurments.numberOfBolts
+	String boltSizeValue = measurments.shaftMountBoltSize
+	for(String key:measurments.keySet()) {
+		println "Key "+key+" value "+measurments.get(key)
+	}								
+	CSG vitamin_capScrew = Vitamins.get("capScrew", boltSizeValue)
+									.toZMin()
+	CSG boltSet =null;
+	double degreesPer = 360/numberOfBolts*2
+	for(int i=0;i<numberOfBolts/2;i++) {
+		CSG moved = vitamin_capScrew.movex(boltPatternDiameterValue/2)
+									.rotz(degreesPer*i)
+		if(boltSet==null)
+			boltSet=moved
+		else
+			boltSet=boltSet.union(moved)
+	}						
+	for(int i=0;i<numberOfBolts/2;i++) {
+		CSG moved = vitamin_capScrew.movex(boltPatternDiameterLong/2)
+									.rotz(degreesPer*i+90)
+		boltSet=boltSet.union(moved)
+	}	
+
+	return boltSet
 		.setParameter(size)
 		.setRegenerate({generate()})
 }
