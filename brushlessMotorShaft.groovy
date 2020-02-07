@@ -14,9 +14,7 @@ CSG generate(){
 	def boltPatternDiameterLong =measurments.boltPatternDiameterLong
 	double numberOfBolts =measurments.numberOfBolts
 	String boltSizeValue = measurments.shaftMountBoltSize
-	for(String key:measurments.keySet()) {
-		println "Key "+key+" value "+measurments.get(key)
-	}								
+							
 	CSG vitamin_capScrew = Vitamins.get("capScrew", boltSizeValue)
 									.toZMin()
 	CSG boltSet =null;
